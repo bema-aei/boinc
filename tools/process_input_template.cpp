@@ -224,10 +224,26 @@ static int process_file_info(
             if (strlen(physical_name)) {
                 // constant file case
                 //
-                dir_hier_path(
-                    physical_name, config_loc.download_dir,
-                    config_loc.uldl_dir_fanout, path, true
-                );
+                char* basename = strrchr(physical_name,'/');
+                if (basename && (basename == physical_name + strlen(physical_name) - 1)) {
+                    fprintf(stderr, "file name '%s' ended in '/' - can't use directories\n",
+                        physical_name
+                    );
+                    return ERR_BAD_FILENAME;
+                }
+                if (baseneme) {
+                    snprintf(path, sizeof(path), "%s/%s", config_loc.download_dir, physical_name);
+                    snprintf(url,  sizeof(url),  "%s/%s", config_loc.download_url, physical_name);
+                } else {
+                    dir_hier_path(
+                        physical_name, config_loc.download_dir,
+                        config_loc.uldl_dir_fanout, path, true
+                    );
+                    dir_hier_url(
+                        physical_name, config_loc.download_url,
+                        config_loc.uldl_dir_fanout, url
+                    );
+                }
                 if (!got_md5_info(path, md5, &nbytes)) {
                     fprintf(stderr, "missing MD5 info file for %s\n",
                         physical_name
@@ -235,22 +251,17 @@ static int process_file_info(
                     return ERR_FILE_MISSING;
                 }
 
-                dir_hier_url(
-                    physical_name, config_loc.download_url,
-                    config_loc.uldl_dir_fanout, url
-                );
-
                 sprintf(buf,
                     "    <name>%s</name>\n"
                     "    <url>%s</url>\n"
                     "    <md5_cksum>%s</md5_cksum>\n"
                     "    <nbytes>%.0f</nbytes>\n",
-                    physical_name,
+                    basename?basename+1:physical_name,
                     url,
                     md5,
                     nbytes
                 );
-                strcpy(infile.name, physical_name);
+                strcpy(infile.name, basename?basename+1:physical_name);
                 strcpy(infile.md5, md5);
                 infile.nbytes = nbytes;
             } else if (nbytesdef > 0) {
