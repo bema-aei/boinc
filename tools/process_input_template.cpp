@@ -295,18 +295,17 @@ static int process_file_info(
             } else if (var_infile.is_remote) {
                 // remote file specified in create_work() arg
                 //
-                sprintf(buf2, "jf_%s", var_infile.md5);
                 sprintf(buf,
                     "    <name>%s</name>\n"
                     "    <url>%s</url>\n"
                     "    <md5_cksum>%s</md5_cksum>\n"
                     "    <nbytes>%.0f</nbytes>\n",
-                    buf2,
+                    var_infile.name,
                     var_infile.url,
                     var_infile.md5,
                     var_infile.nbytes
                 );
-                strcpy(infile.name, buf2);
+                strcpy(infile.name, var_infile.name);
                 strcpy(infile.md5, var_infile.md5);
                 infile.nbytes = var_infile.nbytes;
             } else {
