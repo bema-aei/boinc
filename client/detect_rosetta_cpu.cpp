@@ -65,34 +65,34 @@ static void get_cpu_info_mac() {
     sysctlbyname("hw.optional.arm64", &feature, &len, NULL, 0);
     if (feature) strncat(features, " arm64", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.armv8_1_atomics", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.armv8_1_atomics", &feature, &len, NULL, 0);
     if (feature) strncat(features, " armv8_1_atomics", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.armv8_2_fhm", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.armv8_2_fhm", &feature, &len, NULL, 0);
     if (feature) strncat(features, " armv8_2_fhm", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.armv8_2_sha3", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.armv8_2_sha3", &feature, &len, NULL, 0);
     if (feature) strncat(features, " armv8_2_sha3", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.armv8_2_sha512", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.armv8_2_sha512", &feature, &len, NULL, 0);
     if (feature) strncat(features, " armv8_2_sha512", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.armv8_crc32", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.armv8_crc32", &feature, &len, NULL, 0);
     if (feature) strncat(features, " armv8_crc32", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.floatingpoint", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.floatingpoint", &feature, &len, NULL, 0);
     if (feature) strncat(features, " floatingpoint", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.neon", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.neon", &feature, &len, NULL, 0);
     if (feature) strncat(features, " neon", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.neon_fp16", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.neon_fp16", &feature, &len, NULL, 0);
     if (feature) strncat(features, " neon_fp16", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.neon_hpfp", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.neon_hpfp", &feature, &len, NULL, 0);
     if (feature) strncat(features, " neon_hpfp", sizeof(features) - strlen(features) -1);
 
-    sysctlbyname("hw.optional.ucnormal_mem", buf, &len, NULL, 0);
+    sysctlbyname("hw.optional.ucnormal_mem", &feature, &len, NULL, 0);
     if (feature) strncat(features, " ucnormal_mem", sizeof(features) - strlen(features) -1);
 
 #endif // defined(__i386__) || defined(__x86_64__)
@@ -106,7 +106,4 @@ static void get_cpu_info_mac() {
 
 int main () {
     get_cpu_info_mac();
-#if defined(__arm64__)
-    fprintf(stdout,"arm64\n");
-#endif
 }
