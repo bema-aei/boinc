@@ -890,6 +890,19 @@ static void get_cpu_info_mac(HOST_INFO& host) {
     sysctlbyname("hw.optional.ucnormal_mem", &feature, &len, NULL, 0);
     if (feature) strncat(features, " ucnormal_mem", sizeof(features) - strlen(features) -1);
 
+    // read features of the emulated CPU if there is a file containing these
+    char buf[MAXPATHLEN];
+    boinc_getcwd(buf);
+    strcat(buf,"/");
+    strcat(buf,EMULATED_CPU_INFO_FILENAME);
+    if (boinc_file_exists(EMULATED_CPU_INFO_FILENAME)) {
+        strncat(features, " ", sizeof(features) - strlen(features) -1);
+        FILE* fp = boinc_fopen(buf, "r");
+        if (fp) {
+            fgets(features + strlen(features), sizeof(features) - strlen(features) -1, fp);
+            fclose(fp);
+        }
+    }
 #endif // defined(__i386__) || defined(__x86_64__)
 
     // Convert Mac CPU features string to match that returned by Linux
