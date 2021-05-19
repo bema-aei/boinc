@@ -72,6 +72,106 @@ void CLIENT_STATE::add_platform(const char* platform) {
 }
 
 
+#if defined (__APPLE__) && defined (__arm64__)
+// detect a possibly emulated x86_64 CPU and its features on a Apple Silicon M1 Mac
+//
+int launch_child_process_to_detect_emulated_cpu() {
+#if 0
+    int prog;
+    char quoted_data_dir[MAXPATHLEN+2];
+    char data_dir[MAXPATHLEN];
+    int retval = 0;
+
+    retval = boinc_delete_file(EMULATED_CPU_INFO_FILENAME);
+    if (retval) {
+        msg_printf(0, MSG_INFO,
+            "Failed to delete old %s. error code %d",
+            EMULATED_CPU_INFO_FILENAME, retval
+        );
+    } else {
+        for (;;) {
+            if (!boinc_file_exists(EMULATED_CPU_INFO_FILENAME)) break;
+            boinc_sleep(0.01);
+        }
+    }
+
+    // use full path to exe if possible, otherwise keep using argv[0]
+    char execpath[MAXPATHLEN];
+    if (!get_real_executable_path(execpath, sizeof(execpath))) {
+        client_path = execpath;
+    }
+
+    boinc_getcwd(data_dir);
+
+    strlcpy(quoted_data_dir, data_dir, sizeof(quoted_data_dir));
+
+    if (log_flags.coproc_debug) {
+        msg_printf(0, MSG_INFO,
+            "[coproc] launching child process at %s",
+            client_path
+        );
+        if (!is_path_absolute(client_path)) {
+            msg_printf(0, MSG_INFO,
+                "[coproc] relative to directory %s",
+                client_dir
+            );
+        }
+        msg_printf(0, MSG_INFO,
+            "[coproc] with data directory %s",
+            quoted_data_dir
+        );
+    }
+
+    int argc = 4;
+    char* const argv[5] = {
+         const_cast<char *>(client_path),
+         const_cast<char *>("--detect_gpus"),
+         const_cast<char *>("--dir"),
+         const_cast<char *>(quoted_data_dir),
+         NULL
+    };
+
+    retval = run_program(
+        client_dir,
+        client_path,
+        argc,
+        argv,
+        0,
+        prog
+    );
+
+    if (retval) {
+        if (log_flags.coproc_debug) {
+            msg_printf(0, MSG_INFO,
+                "[coproc] run_program of child process returned error %d",
+                retval
+            );
+        }
+        return retval;
+    }
+
+    retval = get_exit_status(prog);
+    if (retval) {
+        char buf[200];
+        if (WIFEXITED(retval)) {
+            int code = WEXITSTATUS(retval);
+            snprintf(buf, sizeof(buf), "process exited with status %d: %s", code, strerror(code));
+        } else if (WIFSIGNALED(retval)) {
+            int sig = WTERMSIG(retval);
+            snprintf(buf, sizeof(buf), "process was terminated by signal %d", sig);
+        } else {
+            snprintf(buf, sizeof(buf), "unknown status %d", retval);
+        }
+        msg_printf(0, MSG_INFO,
+            "GPU detection failed: %s",
+            buf
+        );
+    }
+#endif
+    return 0;
+}
+#endif
+
 // determine the list of supported platforms.
 //
 void CLIENT_STATE::detect_platforms() {
@@ -106,8 +206,9 @@ void CLIENT_STATE::detect_platforms() {
     }
 #elif defined(__arm64__)
     add_platform("arm64-apple-darwin");
-//TODO: Add test for Mac OS Version when Apple Rosetta emulator is removed 
-    add_platform("x86_64-apple-darwin");
+    if (!launch_child_process_to_detect_emulated_cpu()) {
+        add_platform("x86_64-apple-darwin");
+    }
 #else
 #error Mac client now requires a 64-bit system
 #endif
