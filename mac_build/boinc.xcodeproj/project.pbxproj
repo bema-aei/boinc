@@ -4304,6 +4304,7 @@
 		DD9843DC09920F220090855B /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = x86_64;
 				PRODUCT_NAME = SetVersion;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 			};
@@ -4472,6 +4473,7 @@
 		DD9E235E091CBDAE0048316E /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = x86_64;
 				PRODUCT_NAME = SetVersion;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 			};
