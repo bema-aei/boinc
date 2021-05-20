@@ -3,7 +3,10 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#define P_FEATURES_SIZE 16384
+#include "hostinfo.h"   // for P_FEATURES_SIZE
+#include "filesys.h"    // for boinc_fopen()
+#include "file_names.h" // for EMULATED_CPU_INFO_FILENAME
+
 #ifdef __APPLE__
 static void get_cpu_info_mac() {
     char buf[16384];
@@ -105,5 +108,19 @@ static void get_cpu_info_mac() {
 #endif
 
 int main () {
+#if 1
+    size_t len;
+    char features[P_FEATURES_SIZE];
+    FILE*fp;
+
+    len = sizeof(features);
+    sysctlbyname("machdep.cpu.features", features, &len, NULL, 0);
+    if (fp = boinc_fopen(EMULATED_CPU_INFO_FILENAME, "w")) {
+        fprintf(fp," %s\n", features);
+        fclose(fp);
+    }
+    return 0;
+#else
     get_cpu_info_mac();
+#endif
 }
