@@ -895,13 +895,16 @@ static void get_cpu_info_mac(HOST_INFO& host) {
     boinc_getcwd(buf);
     strcat(buf,"/");
     strcat(buf,EMULATED_CPU_INFO_FILENAME);
-    if (boinc_file_exists(EMULATED_CPU_INFO_FILENAME)) {
-        strncat(features, " ", sizeof(features) - strlen(features) -1);
+    if (boinc_file_exists(buf)) {
         FILE* fp = boinc_fopen(buf, "r");
         if (fp) {
             fgets(features + strlen(features), sizeof(features) - strlen(features) -1, fp);
             fclose(fp);
+        }  else if (log_flags.coproc_debug) {
+            msg_printf(0, MSG_INFO, "[x86_64-M1] didn't find file %s", buf);
         }
+    } else if (log_flags.coproc_debug) {
+        msg_printf(0, MSG_INFO, "[x86_64-M1] didn't find file %s", buf);
     }
 #endif // defined(__i386__) || defined(__x86_64__)
 

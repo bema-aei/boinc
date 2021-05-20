@@ -98,7 +98,7 @@ int launch_child_process_to_detect_emulated_cpu() {
     char execpath[MAXPATHLEN];
     if ((retval = get_real_executable_path(execpath, sizeof(execpath)))) {
         msg_printf(0, MSG_INFO,
-                   "[coproc] failed to get Client executable path: %d\n",
+                   "[x86_64-M1] failed to get Client executable path: %d\n",
                    retval
                   );
         return retval;
@@ -119,12 +119,12 @@ int launch_child_process_to_detect_emulated_cpu() {
 
     if (log_flags.coproc_debug) {
         msg_printf(0, MSG_INFO,
-            "[coproc] launching child process at %s",
+            "[x86_64-M1] launching child process at %s",
             execpath
         );
         if (!is_path_absolute(execpath)) {
             msg_printf(0, MSG_INFO,
-                "[coproc] relative to directory %s",
+                "[x86_64-M1] relative to directory %s",
                 data_dir
             );
         }
@@ -148,7 +148,7 @@ int launch_child_process_to_detect_emulated_cpu() {
     if (retval) {
         if (log_flags.coproc_debug) {
             msg_printf(0, MSG_INFO,
-                "[coproc] run_program of child process returned error %d",
+                "[x86_64-M1] run_program of child process returned error %d",
                 retval
             );
         }
