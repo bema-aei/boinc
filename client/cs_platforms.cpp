@@ -53,6 +53,7 @@ extern int compareOSVersionTo(int toMajor, int toMinor);
 
 #include "client_types.h"
 #include "client_state.h"
+#include "client_msgs.h"
 #include "log_flags.h"
 #include "project.h"
 
@@ -76,9 +77,7 @@ void CLIENT_STATE::add_platform(const char* platform) {
 // detect a possibly emulated x86_64 CPU and its features on a Apple Silicon M1 Mac
 //
 int launch_child_process_to_detect_emulated_cpu() {
-#if 0
     int prog;
-    char quoted_data_dir[MAXPATHLEN+2];
     char data_dir[MAXPATHLEN];
     int retval = 0;
 
@@ -97,43 +96,49 @@ int launch_child_process_to_detect_emulated_cpu() {
 
     // use full path to exe if possible, otherwise keep using argv[0]
     char execpath[MAXPATHLEN];
-    if (!get_real_executable_path(execpath, sizeof(execpath))) {
-        client_path = execpath;
+    if ((retval = get_real_executable_path(execpath, sizeof(execpath)))) {
+        msg_printf(0, MSG_INFO,
+                   "[coproc] failed to get Client executable path: %d\n",
+                   retval
+                  );
+        return retval;
     }
 
-    boinc_getcwd(data_dir);
+    // replace the client's executable name in the client path
+    // with EMULATED_CPU_INFO_EXECUTABLE
+    char*p;
+    if (!(p = strrchr(execpath,'/'))) {
+        p = execpath;
+    } else {
+        p++;
+    }
+    strncpy(p,EMULATED_CPU_INFO_EXECUTABLE,sizeof(execpath) - (execpath - p));
 
-    strlcpy(quoted_data_dir, data_dir, sizeof(quoted_data_dir));
+    // write the EMULATED_CPU_INFO_EXECUTABLE into the BOINC data dir
+    boinc_getcwd(data_dir);
 
     if (log_flags.coproc_debug) {
         msg_printf(0, MSG_INFO,
             "[coproc] launching child process at %s",
-            client_path
+            execpath
         );
-        if (!is_path_absolute(client_path)) {
+        if (!is_path_absolute(execpath)) {
             msg_printf(0, MSG_INFO,
                 "[coproc] relative to directory %s",
-                client_dir
+                data_dir
             );
         }
-        msg_printf(0, MSG_INFO,
-            "[coproc] with data directory %s",
-            quoted_data_dir
-        );
     }
 
-    int argc = 4;
-    char* const argv[5] = {
-         const_cast<char *>(client_path),
-         const_cast<char *>("--detect_gpus"),
-         const_cast<char *>("--dir"),
-         const_cast<char *>(quoted_data_dir),
+    int argc = 1;
+    char* const argv[2] = {
+         const_cast<char *>(execpath),
          NULL
     };
 
     retval = run_program(
-        client_dir,
-        client_path,
+        data_dir,
+        execpath,
         argc,
         argv,
         0,
@@ -163,12 +168,12 @@ int launch_child_process_to_detect_emulated_cpu() {
             snprintf(buf, sizeof(buf), "unknown status %d", retval);
         }
         msg_printf(0, MSG_INFO,
-            "GPU detection failed: %s",
+            "Emulated CPU detection failed: %s",
             buf
         );
     }
-#endif
-    return 0;
+
+    return retval;
 }
 #endif
 
