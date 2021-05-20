@@ -72,7 +72,7 @@ extern void send_log_after(const char* filename, double t, MIOFILE& mf);
 #define CONFIG_FILE                 "cc_config.xml"
 #define NVC_CONFIG_FILE             "nvc_config.xml"
 #define COPROC_INFO_FILENAME        "coproc_info.txt"
-#define EMULATED_CPU_INFO_FILENAME  "emulated_cpu_info.xml"
+#define EMULATED_CPU_INFO_FILENAME  "emulated_cpu_info.txt"
 #define CPU_BENCHMARKS_FILE_NAME    "cpu_benchmarks"
 #define CREATE_ACCOUNT_FILENAME     "create_account.xml"
 #define DAILY_XFER_HISTORY_FILENAME "daily_xfer_history.xml"
