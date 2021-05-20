@@ -1,4 +1,3 @@
-
 // This file is part of BOINC.
 // http://boinc.berkeley.edu
 // Copyright (C) 2020 University of California
@@ -803,110 +802,6 @@ void use_cpuid(HOST_INFO& host) {
 #endif
 
 #ifdef __APPLE__
-#ifdef __arm64__
-// detect a possibly emulated x86_64 CPU and its features on a Apple Silicon M1 Mac
-//
-int launch_child_process_to_detect_emulated_cpu() {
-    int prog;
-    char data_dir[MAXPATHLEN];
-    int retval = 0;
-
-    retval = boinc_delete_file(EMULATED_CPU_INFO_FILENAME);
-    if (retval) {
-        msg_printf(0, MSG_INFO,
-            "Failed to delete old %s. error code %d",
-            EMULATED_CPU_INFO_FILENAME, retval
-        );
-    } else {
-        for (;;) {
-            if (!boinc_file_exists(EMULATED_CPU_INFO_FILENAME)) break;
-            boinc_sleep(0.01);
-        }
-    }
-
-    // use full path to exe if possible, otherwise keep using argv[0]
-    char execpath[MAXPATHLEN];
-    if ((retval = get_real_executable_path(execpath, sizeof(execpath)))) {
-        msg_printf(0, MSG_INFO,
-                   "[x86_64-M1] failed to get Client executable path: %d\n",
-                   retval
-                  );
-        return retval;
-    }
-
-    // replace the client's executable name in the client path
-    // with EMULATED_CPU_INFO_EXECUTABLE
-    char*p;
-    if (!(p = strrchr(execpath,'/'))) {
-        p = execpath;
-    } else {
-        p++;
-    }
-    strncpy(p,EMULATED_CPU_INFO_EXECUTABLE,sizeof(execpath) - (execpath - p));
-
-    // write the EMULATED_CPU_INFO_EXECUTABLE into the BOINC data dir
-    boinc_getcwd(data_dir);
-
-    if (log_flags.coproc_debug) {
-        msg_printf(0, MSG_INFO,
-            "[x86_64-M1] launching child process at %s",
-            execpath
-        );
-        if (!is_path_absolute(execpath)) {
-            msg_printf(0, MSG_INFO,
-                "[x86_64-M1] relative to directory %s",
-                data_dir
-            );
-        }
-    }
-
-    int argc = 1;
-    char* const argv[2] = {
-         const_cast<char *>(execpath),
-         NULL
-    };
-
-    retval = run_program(
-        data_dir,
-        execpath,
-        argc,
-        argv,
-        0,
-        prog
-    );
-
-    if (retval) {
-        if (log_flags.coproc_debug) {
-            msg_printf(0, MSG_INFO,
-                "[coproc] run_program of child process returned error %d",
-                retval
-            );
-        }
-        return retval;
-    }
-
-    retval = get_exit_status(prog);
-    if (retval) {
-        char buf[200];
-        if (WIFEXITED(retval)) {
-            int code = WEXITSTATUS(retval);
-            snprintf(buf, sizeof(buf), "process exited with status %d: %s", code, strerror(code));
-        } else if (WIFSIGNALED(retval)) {
-            int sig = WTERMSIG(retval);
-            snprintf(buf, sizeof(buf), "process was terminated by signal %d", sig);
-        } else {
-            snprintf(buf, sizeof(buf), "unknown status %d", retval);
-        }
-        msg_printf(0, MSG_INFO,
-            "Emulated CPU detection failed: %s",
-            buf
-        );
-    }
-
-    return retval;
-}
-#endif // __arm64__
-
 static void get_cpu_info_mac(HOST_INFO& host) {
     int p_model_size = sizeof(host.p_model);
     size_t len;
@@ -1000,15 +895,13 @@ static void get_cpu_info_mac(HOST_INFO& host) {
     boinc_getcwd(buf);
     strcat(buf,"/");
     strcat(buf,EMULATED_CPU_INFO_FILENAME);
-    if (!launch_child_process_to_detect_emulated_cpu()) {
-      if (boinc_file_exists(EMULATED_CPU_INFO_FILENAME)) {
+    if (boinc_file_exists(EMULATED_CPU_INFO_FILENAME)) {
         strncat(features, " ", sizeof(features) - strlen(features) -1);
         FILE* fp = boinc_fopen(buf, "r");
         if (fp) {
             fgets(features + strlen(features), sizeof(features) - strlen(features) -1, fp);
             fclose(fp);
         }
-      }
     }
 #endif // defined(__i386__) || defined(__x86_64__)
 
