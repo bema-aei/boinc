@@ -810,6 +810,7 @@ static void get_cpu_info_mac(HOST_INFO& host) {
     char *p;
     char *sep=" ";
     int family, stepping, model, feature;
+    string feature_string;
 
     len = sizeof(brand_string);
     sysctlbyname("machdep.cpu.brand_string", brand_string, &len, NULL, 0);
@@ -853,60 +854,65 @@ static void get_cpu_info_mac(HOST_INFO& host) {
 
     features[0] = '\0';
     len = sizeof(feature);
+    feature_string="";
 
     sysctlbyname("hw.optional.amx_version", &feature, &len, NULL, 0);
     snprintf(features, sizeof(features), "amx_version_%d", feature);
+    feature_string += features;
 
     sysctlbyname("hw.optional.arm64", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " arm64", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " arm64";
 
     sysctlbyname("hw.optional.armv8_1_atomics", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " armv8_1_atomics", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " armv8_1_atomics";
 
     sysctlbyname("hw.optional.armv8_2_fhm", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " armv8_2_fhm", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " armv8_2_fhm";
 
     sysctlbyname("hw.optional.armv8_2_sha3", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " armv8_2_sha3", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " armv8_2_sha3";
 
     sysctlbyname("hw.optional.armv8_2_sha512", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " armv8_2_sha512", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " armv8_2_sha512";
 
     sysctlbyname("hw.optional.armv8_crc32", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " armv8_crc32", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " armv8_crc32";
 
     sysctlbyname("hw.optional.floatingpoint", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " floatingpoint", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " floatingpoint";
 
     sysctlbyname("hw.optional.neon", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " neon", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " neon";
 
     sysctlbyname("hw.optional.neon_fp16", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " neon_fp16", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " neon_fp16";
 
     sysctlbyname("hw.optional.neon_hpfp", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " neon_hpfp", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " neon_hpfp";
 
     sysctlbyname("hw.optional.ucnormal_mem", &feature, &len, NULL, 0);
-    if (feature) strncat(features, " ucnormal_mem", sizeof(features) - strlen(features) -1);
+    if (feature) feature_string += " ucnormal_mem";
 
     // read features of the emulated CPU if there is a file containing these
-    char buf[MAXPATHLEN];
-    boinc_getcwd(buf);
-    strcat(buf,"/");
-    strcat(buf,EMULATED_CPU_INFO_FILENAME);
-    if (boinc_file_exists(buf)) {
-        FILE* fp = boinc_fopen(buf, "r");
+    char fpath[MAXPATHLEN];
+    boinc_getcwd(fpath);
+    strcat(fpath,"/");
+    strcat(fpath,EMULATED_CPU_INFO_FILENAME);
+    if (boinc_file_exists(fpath)) {
+        FILE* fp = boinc_fopen(fpath, "r");
         if (fp) {
-            fgets(features + strlen(features), sizeof(features) - strlen(features) -1, fp);
+            fgets(features, sizeof(features), fp);
+	    feature_string += features;
             fclose(fp);
-        }  else if (log_flags.coproc_debug) {
-            msg_printf(0, MSG_INFO, "[x86_64-M1] didn't find file %s", buf);
+        } else if (log_flags.coproc_debug) {
+            msg_printf(0, MSG_INFO, "[x86_64-M1] couldn't open file %s", fpath);
         }
     } else if (log_flags.coproc_debug) {
-        msg_printf(0, MSG_INFO, "[x86_64-M1] didn't find file %s", buf);
+        msg_printf(0, MSG_INFO, "[x86_64-M1] didn't find file %s", fpath);
     }
 #endif // defined(__i386__) || defined(__x86_64__)
+
+    strncpy(features,feature_string.c_str(),sizeof(features));
 
     // Convert Mac CPU features string to match that returned by Linux
     for(p=features; *p; p++) {
