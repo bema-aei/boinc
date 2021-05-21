@@ -828,14 +828,14 @@ static void get_cpu_info_mac(HOST_INFO& host) {
         len = sizeof(host.p_vendor);
         sysctlbyname("machdep.cpu.vendor", host.p_vendor, &len, NULL, 0);
 
-	len = sizeof(family);
-	sysctlbyname("machdep.cpu.family", &family, &len, NULL, 0);
+        len = sizeof(family);
+        sysctlbyname("machdep.cpu.family", &family, &len, NULL, 0);
 
-	len = sizeof(model);
-	sysctlbyname("machdep.cpu.model", &model, &len, NULL, 0);
+        len = sizeof(model);
+        sysctlbyname("machdep.cpu.model", &model, &len, NULL, 0);
 
-	len = sizeof(stepping);
-	sysctlbyname("machdep.cpu.stepping", &stepping, &len, NULL, 0);
+        len = sizeof(stepping);
+        sysctlbyname("machdep.cpu.stepping", &stepping, &len, NULL, 0);
 
         snprintf(
             host.p_model, sizeof(host.p_model),
