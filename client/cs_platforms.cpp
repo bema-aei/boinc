@@ -79,6 +79,7 @@ void CLIENT_STATE::add_platform(const char* platform) {
 int launch_child_process_to_detect_emulated_cpu() {
     int prog;
     char data_dir[MAXPATHLEN];
+    char execpath[MAXPATHLEN];
     int retval = 0;
 
     retval = boinc_delete_file(EMULATED_CPU_INFO_FILENAME);
@@ -94,40 +95,19 @@ int launch_child_process_to_detect_emulated_cpu() {
         }
     }
 
-    // use full path to exe if possible, otherwise keep using argv[0]
-    char execpath[MAXPATHLEN];
-    if ((retval = get_real_executable_path(execpath, sizeof(execpath)))) {
-        msg_printf(0, MSG_INFO,
-                   "[x86_64-M1] failed to get Client executable path: %d\n",
-                   retval
-                  );
-        return retval;
-    }
 
-    // replace the client's executable name in the client path
-    // with EMULATED_CPU_INFO_EXECUTABLE
-    char*p;
-    if (!(p = strrchr(execpath,'/'))) {
-        p = execpath;
-    } else {
-        p++;
-    }
-    strncpy(p,EMULATED_CPU_INFO_EXECUTABLE,sizeof(execpath) - (execpath - p));
-
-    // write the EMULATED_CPU_INFO_EXECUTABLE into the BOINC data dir
+    // write the EMULATED_CPU_INFO into the BOINC data dir
     boinc_getcwd(data_dir);
+
+    // the execuable should be in BOINC data dir
+    strncpy(execpath, data_dir, sizeof(execpath));
+    strncat(execpath, "/" EMULATED_CPU_INFO_EXECUTABLE, sizeof(execpath) - strlen(execpath) - 1);
 
     if (log_flags.coproc_debug) {
         msg_printf(0, MSG_INFO,
             "[x86_64-M1] launching child process at %s",
             execpath
         );
-        if (!is_path_absolute(execpath)) {
-            msg_printf(0, MSG_INFO,
-                "[x86_64-M1] relative to directory %s",
-                data_dir
-            );
-        }
     }
 
     int argc = 1;
