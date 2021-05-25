@@ -584,6 +584,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B1A32E54265D206800896566 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20286C28FDCF999611CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B13E2D0E265564D100D5C977;
+			remoteInfo = detect_rosetta_cpu;
+		};
+		B1A32E57265D20FB00896566 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20286C28FDCF999611CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD407A4907D2FB1200163EF5;
+			remoteInfo = libboinc;
+		};
 		DD095D1E0F3B22DE000902F5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 20286C28FDCF999611CA2CEA /* Project object */;
@@ -2566,6 +2580,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				B1A32E58265D20FB00896566 /* PBXTargetDependency */,
+				B1A32E55265D206800896566 /* PBXTargetDependency */,
 				DD25E20D220438090040366F /* PBXTargetDependency */,
 			);
 			name = BOINC_Client;
@@ -3667,6 +3683,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B1A32E55265D206800896566 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B13E2D0E265564D100D5C977 /* detect_rosetta_cpu */;
+			targetProxy = B1A32E54265D206800896566 /* PBXContainerItemProxy */;
+		};
+		B1A32E58265D20FB00896566 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD407A4907D2FB1200163EF5 /* libboinc */;
+			targetProxy = B1A32E57265D20FB00896566 /* PBXContainerItemProxy */;
+		};
 		DD095D1F0F3B22DE000902F5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD89161C0F3B17E900DE5B1C /* ss_app */;
