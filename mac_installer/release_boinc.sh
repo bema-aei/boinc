@@ -399,7 +399,7 @@ if [ -e "${HOME}/BOINCCodeSignIdentities.txt" ]; then
     # Code Sign the boincscr graphics app if we have a signing identity
     sudo codesign -f -o runtime -s "${APPSIGNINGIDENTITY}" "../BOINC_Installer/Pkg_Root/Library/Application Support/BOINC Data/boincscr"
 
-    # Code Sign the boincscr graphics app if we have a signing identity
+    # Code Sign detect_rosetta_cpu app if we have a signing identity
     sudo codesign -f -o runtime -s "${APPSIGNINGIDENTITY}" "../BOINC_Installer/Pkg_Root/Library/Application Support/BOINC Data/detect_rosetta_cpu"
 
     # Code Sign the BOINC screensaver code for OS 10.6 and OS 10.7 if we have a signing identity
