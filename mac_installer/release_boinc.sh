@@ -546,6 +546,9 @@ if [ -n "${APPSIGNINGIDENTITY}" ]; then
     # Code Sign switcher for the stand-alone boinc client if we have a signing identity
     sudo codesign -f -o runtime -s "${APPSIGNINGIDENTITY}" "../BOINC_Installer/New_Release_$1_$2_$3/boinc_$1.$2.$3_$arch-apple-darwin/move_to_boinc_dir/switcher/switcher"
 
+    # Code Sign detect_rosetta_cpu if we have a signing identity
+    sudo codesign -f -o runtime -s "${APPSIGNINGIDENTITY}" "../BOINC_Installer/New_Release_$1_$2_$3/boinc_$1.$2.$3_$arch-apple-darwin/move_to_boinc_dir/detect_rosetta_cpu"
+
     if [ $arch = "universal" ]; then
     # Workaround for code signing problem under Xcode 12.2:
     # Code sign each architecture separately then combine into a uiversal binary
