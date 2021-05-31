@@ -1,6 +1,6 @@
 // This file is part of BOINC.
 // http://boinc.berkeley.edu
-// Copyright (C) 2020 University of California
+// Copyright (C) 2021 University of California
 //
 // BOINC is free software; you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License
@@ -15,9 +15,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with BOINC.  If not, see <http://www.gnu.org/licenses/>.
 
-// This helper program should is used to detect an emulated x86_64 CPU
-// on Apples arm64 CPUs. It should be compiiled _only_ for x86_64 architecture
-// and writes the feature string of the meulated CPU to a file
+// This helper program is used to detect an emulated x86_64 CPU on Apples
+// ARM64 CPUs (M1). It should be compiiled _only_ for x86_64 architecture.
+// It writes the feature string of the meulated CPU to a file
 // EMULATED_CPU_INFO_FILENAME in the current working directory.
 
 #include <stdio.h>
