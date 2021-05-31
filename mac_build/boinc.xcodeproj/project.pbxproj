@@ -899,7 +899,7 @@
 		AAA31C98042157A800A80164 /* shmem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = shmem.h; path = ../lib/shmem.h; sourceTree = SOURCE_ROOT; };
 		B13E2D0F265564D100D5C977 /* detect_rosetta_cpu */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = detect_rosetta_cpu; sourceTree = BUILT_PRODUCTS_DIR; };
 		B13E2D11265564D100D5C977 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		B13E2D162655655000D5C977 /* detect_rosetta_cpu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = detect_rosetta_cpu.cpp; path = ../client/detect_rosetta_cpu.cpp; sourceTree = "<group>"; };
+		B13E2D162655655000D5C977 /* detect_rosetta_cpu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = detect_rosetta_cpu.cpp; sourceTree = "<group>"; };
 		DD000D7324D0244C0083DE77 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		DD0052F710CA6F1D0067570C /* cs_proxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cs_proxy.cpp; path = ../client/cs_proxy.cpp; sourceTree = SOURCE_ROOT; };
 		DD0052F810CA6F1D0067570C /* cs_proxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cs_proxy.h; path = ../client/cs_proxy.h; sourceTree = SOURCE_ROOT; };
@@ -1008,7 +1008,6 @@
 		DD40825707D3076400163EF5 /* reduce_lib.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = reduce_lib.cpp; sourceTree = "<group>"; };
 		DD40825807D3076400163EF5 /* reduce_main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = reduce_main.cpp; sourceTree = "<group>"; };
 		DD40825907D3076400163EF5 /* reduce.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = reduce.h; path = ../api/reduce.h; sourceTree = SOURCE_ROOT; };
-		DD40827D07D30AA800163EF5 /* jpeglib.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = jpeglib.h; path = ../samples/jpeglib/jpeglib.h; sourceTree = SOURCE_ROOT; };
 		DD40E75D0ADB87BC00214518 /* wxPieCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = wxPieCtrl.cpp; path = ../clientgui/common/wxPieCtrl.cpp; sourceTree = SOURCE_ROOT; };
 		DD40E75E0ADB87BC00214518 /* wxPieCtrl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = wxPieCtrl.h; path = ../clientgui/common/wxPieCtrl.h; sourceTree = SOURCE_ROOT; };
 		DD4688410C165F3C0089F500 /* Uninstall BOINC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Uninstall BOINC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1623,8 +1622,6 @@
 		20286C29FDCF999611CA2CEA /* ¬´PROJECTNAME¬ª */ = {
 			isa = PBXGroup;
 			children = (
-				B13E2D162655655000D5C977 /* detect_rosetta_cpu.cpp */,
-				DD40827D07D30AA800163EF5 /* jpeglib.h */,
 				F54B8FBE02AC0A0C01FB7237 /* client */,
 				DD81C3F707C5D03B0098A04D /* clientgui */,
 				DDB873950C85072500E0DE1F /* clientscr */,
@@ -2123,6 +2120,7 @@
 				F54B8FC902AC0A0C01FB7237 /* cs_scheduler.cpp */,
 				DD344B9307C5AE2E0043025C /* cs_statefile.cpp */,
 				DD344B9407C5AE2E0043025C /* cs_trickle.cpp */,
+				B13E2D162655655000D5C977 /* detect_rosetta_cpu.cpp */,
 				DD344B9507C5AE2E0043025C /* dhrystone.cpp */,
 				DD344B9607C5AE2E0043025C /* dhrystone.h */,
 				DD344B9707C5AE2E0043025C /* dhrystone2.cpp */,
@@ -3940,7 +3938,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3997,7 +3995,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-lboinc";
